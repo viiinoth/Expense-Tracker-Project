@@ -6,7 +6,7 @@ import android.os.Handler;
 import androidx.appcompat.app.AppCompatActivity;
 
 public class SplashScreenActivity extends AppCompatActivity {
-    private static final int SPLASH_DISPLAY_LENGTH = 2000;
+    private static final int SPLASH_DISPLAY_LENGTH = 2000; // 2 seconds
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -14,8 +14,8 @@ public class SplashScreenActivity extends AppCompatActivity {
         setContentView(R.layout.splash_screen);
 
         new Handler().postDelayed(() -> {
-            Intent intent = new Intent(SplashScreenActivity.this, DashboardActivity.class);
-            startActivity(intent);
+            Intent mainIntent = new Intent(SplashScreenActivity.this, HomeActivity.class);
+            startActivity(mainIntent);
             finish();
         }, SPLASH_DISPLAY_LENGTH);
     }
