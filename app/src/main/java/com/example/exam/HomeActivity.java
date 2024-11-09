@@ -2,15 +2,12 @@ package com.example.exam;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.GenericTypeIndicator;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -39,22 +36,26 @@ public class HomeActivity extends AppCompatActivity {
             startActivity(intent);
         });
 
-        // Update the total expense from Firebase data
-        updateTotalExpense();
+        fetchExpenses();
     }
 
-    private void updateTotalExpense() {
-        // Firebase code to fetch and sum up the expenses
+    private void fetchExpenses() {
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference("expenses");
         reference.get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
-                List<Expense> expenses = task.getResult().getValue(new GenericTypeIndicator<List<Expense>>() {});
-                double totalExpense = 0;
-                for (Expense expense : expenses) {
-                    totalExpense += expense.getAmount();
-                }
-                totalExpenseTextView.setText("Total Expense: $" + totalExpense);
+                List<Expense> expenses = task.getResult().getValue(List.class);
+                expenseList.addAll(expenses);
+                expenseAdapter.notifyDataSetChanged();
+                updateTotalExpense();
             }
         });
+    }
+
+    private void updateTotalExpense() {
+        double totalExpense = 0;
+        for (Expense expense : expenseList) {
+            totalExpense += expense.getAmount();
+        }
+        totalExpenseTextView.setText("Total Expense: $" + totalExpense);
     }
 }

@@ -9,11 +9,15 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import android.app.DatePickerDialog;
+import android.widget.DatePicker;
+import java.util.Calendar;
 
 public class AddExpenseActivity extends AppCompatActivity {
     private EditText expenseNameEditText, expenseAmountEditText;
     private Spinner categorySpinner;
-    private Button saveExpenseButton;
+    private Button saveExpenseButton, expenseDateButton;
+    private int mYear, mMonth, mDay;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,23 +28,70 @@ public class AddExpenseActivity extends AppCompatActivity {
         expenseAmountEditText = findViewById(R.id.expense_amount);
         categorySpinner = findViewById(R.id.category_spinner);
         saveExpenseButton = findViewById(R.id.save_expense_button);
+        expenseDateButton = findViewById(R.id.expense_date_button);
 
-        saveExpenseButton.setOnClickListener(v -> {
-            saveExpense();
-        });
+        // Set default date when activity is created
+        setDefaultDate();
+
+        // Show DatePicker when the button is clicked
+        expenseDateButton.setOnClickListener(v -> showDatePicker());
+
+        // Save the expense when the save button is clicked
+        saveExpenseButton.setOnClickListener(v -> saveExpense());
+    }
+
+    private void setDefaultDate() {
+        // Set the current date as the default date on the button
+        Calendar calendar = Calendar.getInstance();
+        mYear = calendar.get(Calendar.YEAR);
+        mMonth = calendar.get(Calendar.MONTH);
+        mDay = calendar.get(Calendar.DAY_OF_MONTH);
+
+        String defaultDate = mDay + "/" + (mMonth + 1) + "/" + mYear;
+        expenseDateButton.setText(defaultDate);
+    }
+
+    private void showDatePicker() {
+        // Show DatePicker dialog when the button is clicked
+        DatePickerDialog datePickerDialog = new DatePickerDialog(
+                AddExpenseActivity.this,
+                (view, year, monthOfYear, dayOfMonth) -> {
+                    // Set the selected date to the button
+                    String selectedDate = dayOfMonth + "/" + (monthOfYear + 1) + "/" + year;
+                    expenseDateButton.setText(selectedDate);
+                    mYear = year;
+                    mMonth = monthOfYear;
+                    mDay = dayOfMonth;
+                },
+                mYear, mMonth, mDay);
+
+        datePickerDialog.show();
     }
 
     private void saveExpense() {
+        // Get values from the input fields
         String name = expenseNameEditText.getText().toString();
-        double amount = Double.parseDouble(expenseAmountEditText.getText().toString());
+        String amountString = expenseAmountEditText.getText().toString();
         String category = categorySpinner.getSelectedItem().toString();
-        String date = "2024-11-09"; // Date should be selected with a DatePicker
+        String date = expenseDateButton.getText().toString();  // Get the selected date from the button
 
-        // Firebase save
+        if (name.isEmpty() || amountString.isEmpty() || category.equals("Select Category") || date.equals("Pick Date")) {
+            Toast.makeText(this, "Please fill all fields", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        // Convert amount to double
+        double amount = Double.parseDouble(amountString);
+
+        // Create an Expense object
         Expense expense = new Expense(name, amount, category, date);
+
+        // Get a reference to Firebase Database
         DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("expenses");
         String expenseId = databaseReference.push().getKey();
+
         if (expenseId != null) {
+            // Save the expense data to Firebase
             databaseReference.child(expenseId).setValue(expense)
                     .addOnCompleteListener(task -> {
                         if (task.isSuccessful()) {
