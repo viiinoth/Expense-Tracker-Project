@@ -13,11 +13,10 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.splash_screen);
 
-        // Delay and start the HomeActivity after the splash screen
         new Handler().postDelayed(() -> {
             Intent mainIntent = new Intent(MainActivity.this, HomeActivity.class);
             startActivity(mainIntent);
-            finish();  // Finish MainActivity so the user cannot go back to it
+            finish();
         }, SPLASH_DISPLAY_LENGTH);
     }
 }

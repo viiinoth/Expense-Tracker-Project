@@ -30,7 +30,8 @@
             android:exported="true">
             <!-- No need for intent filter here, this activity will be launched from MainActivity -->
         </activity>
-
+        <!-- AddExpenseActivity declaration -->
+        <activity android:name=".AddExpenseActivity" />
     </application>
 
 </manifest>

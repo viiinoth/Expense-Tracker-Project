@@ -6,7 +6,9 @@ public class Expense {
     private String category;
     private String date;
 
-    // Constructor, getters, and setters
+    public Expense() {
+        // Default constructor required for calls to DataSnapshot.getValue(Expense.class)
+    }
 
     public Expense(String name, double amount, String category, String date) {
         this.name = name;
@@ -15,6 +17,7 @@ public class Expense {
         this.date = date;
     }
 
+    // Getters and setters
     public String getName() {
         return name;
     }

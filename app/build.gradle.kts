@@ -46,4 +46,11 @@ dependencies {
     androidTestImplementation(libs.espresso.core)
     implementation(platform("com.google.firebase:firebase-bom:33.5.1"))
     implementation("com.google.firebase:firebase-analytics")
+    // Add this line to include RecyclerView
+    implementation("androidx.recyclerview:recyclerview:1.2.1")  // Or the latest version
+
+    // Firebase and other dependencies
+    implementation("com.google.firebase:firebase-database:20.0.5")
+    implementation("com.google.firebase:firebase-analytics:21.0.0")
+    // Other dependencies
 }

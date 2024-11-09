@@ -11,6 +11,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import android.app.DatePickerDialog;
 import android.widget.DatePicker;
+import android.widget.ArrayAdapter; // Added for spinner
 import java.util.Calendar;
 
 public class AddExpenseActivity extends AppCompatActivity {
@@ -30,6 +31,9 @@ public class AddExpenseActivity extends AppCompatActivity {
         saveExpenseButton = findViewById(R.id.save_expense_button);
         expenseDateButton = findViewById(R.id.expense_date_button);
 
+        // Populate the spinner with categories
+        populateCategorySpinner();
+
         // Set default date when activity is created
         setDefaultDate();
 
@@ -38,6 +42,18 @@ public class AddExpenseActivity extends AppCompatActivity {
 
         // Save the expense when the save button is clicked
         saveExpenseButton.setOnClickListener(v -> saveExpense());
+    }
+
+    private void populateCategorySpinner() {
+        // List of categories to be displayed in the spinner
+        String[] categories = {"Food", "Transport", "Accommodation"};
+
+        // Create an ArrayAdapter to bind the data to the Spinner
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, categories);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+        // Set the adapter to the spinner
+        categorySpinner.setAdapter(adapter);
     }
 
     private void setDefaultDate() {
