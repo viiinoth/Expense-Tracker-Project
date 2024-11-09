@@ -46,7 +46,7 @@ public class AddExpenseActivity extends AppCompatActivity {
 
     private void populateCategorySpinner() {
         // List of categories to be displayed in the spinner
-        String[] categories = {"Food", "Transport", "Accommodation"};
+        String[] categories = {"Select Category", "Food", "Transport", "Accommodation"};
 
         // Create an ArrayAdapter to bind the data to the Spinner
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, categories);
